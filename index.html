@@ -1,0 +1,545 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LearnwithNitin | English Tenses Challenge</title>
+<style>
+:root {
+  --navy:#172554; --blue:#2563eb; --gold:#fbbf24;
+  --bg:#f1f5f9; --green:#15803d; --red:#b91c1c;
+}
+* { box-sizing:border-box; }
+body {
+  margin:0; padding:16px; background:var(--bg); color:#172033;
+  font-family:Arial,Helvetica,sans-serif; display:flex;
+  align-items:flex-start; justify-content:center;
+}
+.container {
+  width:100%; max-width:850px; margin:16px auto;
+}
+header {
+  background:var(--navy); color:white; padding:24px;
+  border-radius:18px; text-align:center; margin-bottom:16px;
+}
+header h1 { margin:0 0 8px; font-size:clamp(24px,5vw,34px); }
+header p { margin:0; color:#dbeafe; }
+.panel {
+  background:white; border-radius:16px; padding:22px;
+  margin-bottom:16px; box-shadow:0 4px 14px #0f172a0c;
+}
+.hidden { display:none !important; }
+h2,h3 { color:var(--navy); }
+button,select {
+  font:inherit; border-radius:10px; padding:12px 15px;
+}
+button {
+  border:0; background:var(--blue); color:white;
+  cursor:pointer; font-weight:bold; margin:5px 3px;
+}
+button:hover { filter:brightness(.93); }
+button:disabled { opacity:.5; cursor:not-allowed; }
+button.secondary { background:#e2e8f0; color:#172033; }
+button.gold { background:var(--gold); color:#172033; }
+select {
+  width:100%; background:white; color:#172033;
+  border:2px solid #93c5fd; margin:8px 0 14px;
+}
+.grid {
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+  gap:12px;
+}
+.stat {
+  background:#eff6ff; border-radius:12px; padding:15px;
+  text-align:center;
+}
+.stat strong { display:block; font-size:26px; color:var(--navy); }
+.level-card {
+  border:2px solid #dbeafe; border-radius:12px; padding:15px;
+}
+.level-card h3 { margin-top:0; }
+.badges {
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(145px,1fr));
+  gap:10px;
+}
+.badge {
+  padding:14px 10px; text-align:center; border-radius:12px;
+  background:#fef3c7; border:1px solid #fcd34d;
+}
+.badge.locked { background:#f1f5f9; border-color:#cbd5e1; opacity:.58; }
+.badge .emoji { font-size:30px; display:block; margin-bottom:6px; }
+.badge small { display:block; margin-top:5px; line-height:1.4; }
+.progress {
+  height:10px; background:#e2e8f0; border-radius:10px; overflow:hidden;
+}
+.progress div { height:100%; background:#22c55e; width:0%; }
+.question-top {
+  display:flex; justify-content:space-between; flex-wrap:wrap;
+  gap:8px; margin-bottom:12px; color:#475569; font-weight:bold;
+}
+#questionText { font-size:clamp(21px,4vw,29px); line-height:1.4; }
+.answers { display:grid; gap:10px; margin:20px 0; }
+.answer {
+  width:100%; text-align:left; color:#172033; background:#f8fafc;
+  border:2px solid #cbd5e1; margin:0; padding:15px;
+}
+.answer.correct { background:#dcfce7; border-color:#16a34a; }
+.answer.wrong { background:#fee2e2; border-color:#dc2626; }
+#feedback { padding:14px; border-radius:10px; margin:12px 0; }
+#feedback.good { background:#dcfce7; color:#166534; }
+#feedback.bad { background:#fee2e2; color:#991b1b; }
+#badgeCelebration {
+  border:2px solid #f59e0b;
+  background:linear-gradient(135deg,#fffbeb,#fef3c7);
+  text-align:center;
+}
+#badgeCelebration h2 { color:#92400e; }
+.unlocked-list { display:grid; gap:10px; margin-top:14px; }
+.unlocked-item {
+  background:white; border:1px solid #fbbf24; border-radius:12px;
+  padding:12px; display:flex; gap:12px; align-items:center;
+  text-align:left;
+}
+.unlocked-item .emoji { font-size:32px; }
+.unlocked-item strong { display:block; color:#92400e; }
+.note { color:#64748b; font-size:14px; line-height:1.5; }
+textarea {
+  width:100%; min-height:95px; padding:12px; border-radius:10px;
+  border:1px solid #cbd5e1; font:inherit;
+}
+footer { text-align:center; padding:15px; color:#64748b; font-size:13px; }
+</style>
+</head>
+<body>
+<div class="container">
+<header>
+  <h1>📘 English Tenses Challenge</h1>
+  <p>LearnwithNitin | Learn English through fun quizzes!</p>
+</header>
+
+<section id="homeScreen">
+  <div class="panel">
+    <h2>Welcome, Grammar Champion! 🎯</h2>
+    <p>Choose a level, answer 10 questions and earn XP. Watch out for new badge celebrations after each round!</p>
+    <div class="grid">
+      <div class="stat"><strong id="totalXP">0</strong> Total XP</div>
+      <div class="stat"><strong id="bestScore">0/10</strong> Best Score</div>
+      <div class="stat"><strong id="roundsPlayed">0</strong> Rounds Played</div>
+      <div class="stat"><strong id="rank">Beginner</strong> Your Rank</div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h2>Choose Your Challenge</h2>
+    <div class="grid">
+      <div class="level-card">
+        <h3>🌱 Level 1 — Beginner</h3>
+        <p>Grades 4–5</p><p class="note">Build your tense basics.</p>
+        <button onclick="startGame('level1')">Play Level 1</button>
+      </div>
+      <div class="level-card">
+        <h3>🚀 Level 2 — Intermediate</h3>
+        <p>Grades 6–7</p><p class="note">Practise different tenses.</p>
+        <button onclick="startGame('level2')">Play Level 2</button>
+      </div>
+      <div class="level-card">
+        <h3>🔥 Level 3 — Challenge</h3>
+        <p>Grades 7–8</p><p class="note">Test your grammar skills.</p>
+        <button onclick="startGame('level3')">Play Level 3</button>
+      </div>
+      <div class="level-card">
+        <h3>🎲 Mixed Challenge</h3>
+        <p>All levels</p><p class="note">A surprise mix of questions.</p>
+        <button onclick="startGame('mixed')">Play Mixed</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h2>🏅 Your Badges</h2>
+    <p class="note">Unlock badges by playing, earning XP and completing levels.</p>
+    <div id="badgeBoard" class="badges"></div>
+  </div>
+
+  <div class="panel">
+    <h2>Invite a Friend</h2>
+    <p>Challenge your friends to beat your score!</p>
+    <textarea id="inviteText" readonly>Hey! 🎯 Try the LearnwithNitin English Tenses Challenge. Test your grammar skills and see how many points you can score!</textarea>
+    <button onclick="copyText('inviteText')">Copy Invitation</button>
+  </div>
+</section>
+
+<section id="gameScreen" class="hidden">
+  <div class="panel">
+    <div class="question-top">
+      <span id="roundLabel">Question 1 of 10</span>
+      <span id="timer">⏱ 15 seconds</span>
+      <span id="scoreLabel">Score: 0</span>
+    </div>
+    <div class="progress"><div id="progressBar"></div></div>
+    <h2 id="levelLabel">Level 1</h2>
+    <h3 id="questionText"></h3>
+    <div id="answerButtons" class="answers"></div>
+    <div id="feedback" class="hidden"></div>
+    <button id="nextButton" class="hidden" onclick="nextQuestion()">Next Question →</button>
+    <button class="secondary" onclick="quitGame()">Exit Quiz</button>
+  </div>
+</section>
+
+<section id="resultsScreen" class="hidden">
+  <div class="panel" style="text-align:center">
+    <h2 id="resultTitle">Round Complete!</h2>
+    <p id="resultScore"></p>
+    <div class="grid">
+      <div class="stat"><strong id="roundXP">0</strong> XP Earned</div>
+      <div class="stat"><strong id="correctCount">0/10</strong> Correct Answers</div>
+    </div>
+  </div>
+
+  <div id="badgeCelebration" class="panel hidden" aria-live="polite">
+    <h2>🎉 Amazing! New Badge Unlocked!</h2>
+    <p>You’ve reached a new milestone. Keep up the great work!</p>
+    <div id="newBadgesList" class="unlocked-list"></div>
+  </div>
+
+  <div class="panel">
+    <h2>What would you like to do next?</h2>
+    <label for="nextLevel">Choose your next challenge</label>
+    <select id="nextLevel">
+      <option value="level1">Level 1 — Beginner</option>
+      <option value="level2">Level 2 — Intermediate</option>
+      <option value="level3">Level 3 — Challenge</option>
+      <option value="mixed">Mixed Challenge</option>
+    </select>
+    <button onclick="startGame(document.getElementById('nextLevel').value)">Play Selected Level</button>
+    <button class="gold" onclick="startGame(lastMode)">Play Again</button>
+    <button class="secondary" onclick="showHome()">Back to Home</button>
+  </div>
+
+  <div class="panel">
+    <h2>Share Your Score</h2>
+    <textarea id="shareText" readonly></textarea>
+    <button onclick="copyText('shareText')">Copy Score Message</button>
+  </div>
+</section>
+
+<footer>LearnwithNitin | English Tenses Challenge</footer>
+</div>
+
+<script>
+const questionSets = {
+level1: [
+{id:'l1-01',q:'She ___ to school every day.',a:['go','goes','going','gone'],c:1,e:'Use the simple present: she goes.'},
+{id:'l1-02',q:'I ___ my homework now.',a:['do','did','am doing','does'],c:2,e:'“Now” suggests the present continuous: am doing.'},
+{id:'l1-03',q:'They ___ cricket yesterday.',a:['play','plays','played','playing'],c:2,e:'“Yesterday” indicates the simple past: played.'},
+{id:'l1-04',q:'We ___ to the zoo tomorrow.',a:['went','go','will go','goes'],c:2,e:'Use “will go” for a future action.'},
+{id:'l1-05',q:'He ___ milk every morning.',a:['drink','drinks','drank','drinking'],c:1,e:'For he/she/it in simple present, use drinks.'},
+{id:'l1-06',q:'Look! The baby ___.',a:['cries','cried','is crying','cry'],c:2,e:'An action happening now uses is crying.'},
+{id:'l1-07',q:'Riya ___ a letter last night.',a:['writes','write','wrote','writing'],c:2,e:'The past form of write is wrote.'},
+{id:'l1-08',q:'I ___ my grandparents next week.',a:['visited','visit','will visit','visiting'],c:2,e:'Next week points to the future.'},
+{id:'l1-09',q:'The sun ___ in the east.',a:['rise','rises','rose','rising'],c:1,e:'General facts use the simple present: rises.'},
+{id:'l1-10',q:'They ___ TV at the moment.',a:['watch','watched','are watching','watches'],c:2,e:'“At the moment” indicates are watching.'},
+{id:'l1-11',q:'My father ___ dinner yesterday.',a:['cooks','cook','cooked','cooking'],c:2,e:'Yesterday calls for the simple past: cooked.'},
+{id:'l1-12',q:'I ___ happy today.',a:['am','was','be','were'],c:0,e:'Use am with I in the present.'},
+{id:'l1-13',q:'She ___ a new book last Sunday.',a:['buys','buy','bought','buying'],c:2,e:'The past form of buy is bought.'},
+{id:'l1-14',q:'Listen! The birds ___.',a:['sing','sang','are singing','sings'],c:2,e:'Listen! signals an action happening now.'},
+{id:'l1-15',q:'We ___ our room every Saturday.',a:['clean','cleans','cleaned','cleaning'],c:0,e:'With we, use clean in the simple present.'},
+{id:'l1-16',q:'He ___ late yesterday.',a:['is','are','was','were'],c:2,e:'Use was with he for the past.'},
+{id:'l1-17',q:'I think it ___ rain tomorrow.',a:['did','will','was','has'],c:1,e:'Use will to talk about the future.'},
+{id:'l1-18',q:'The children ___ in the park now.',a:['played','play','are playing','plays'],c:2,e:'Now indicates the present continuous.'},
+{id:'l1-19',q:'Meena ___ her teeth twice a day.',a:['brush','brushes','brushed','brushing'],c:1,e:'Meena is singular, so use brushes.'},
+{id:'l1-20',q:'We ___ a movie last night.',a:['see','saw','seeing','sees'],c:1,e:'The past form of see is saw.'}
+],
+level2: [
+{id:'l2-01',q:'She ___ here since 2020.',a:['lives','lived','has lived','is living'],c:2,e:'Since with a continuing situation often uses the present perfect.'},
+{id:'l2-02',q:'I ___ when the phone rang.',a:['sleep','slept','was sleeping','am sleeping'],c:2,e:'An action in progress interrupted by another uses past continuous.'},
+{id:'l2-03',q:'By the time we arrived, the film ___.',a:['starts','started','had started','has started'],c:2,e:'The earlier past action uses past perfect: had started.'},
+{id:'l2-04',q:'They ___ their project already.',a:['finish','finished','have finished','finishing'],c:2,e:'“Already” can indicate the present perfect.'},
+{id:'l2-05',q:'At 8 p.m. tonight, I ___ for my test.',a:['study','studied','will be studying','have studied'],c:2,e:'An action in progress at a future time uses future continuous.'},
+{id:'l2-06',q:'He usually ___ to work by bus.',a:['travel','travels','travelled','is travel'],c:1,e:'A routine uses the simple present: travels.'},
+{id:'l2-07',q:'We ___ lunch before the guests came.',a:['eat','ate','had eaten','have eaten'],c:2,e:'The meal happened before another past event.'},
+{id:'l2-08',q:'Listen! Someone ___ at the door.',a:['knocks','knocked','is knocking','has knocked'],c:2,e:'The action is happening right now.'},
+{id:'l2-09',q:'I ___ this book twice.',a:['read','have read','am reading','had reading'],c:1,e:'Use present perfect for an experience up to now.'},
+{id:'l2-10',q:'While Maya ___, her brother was cooking.',a:['studies','studied','was studying','has studied'],c:2,e:'Two actions in progress in the past use past continuous.'},
+{id:'l2-11',q:'He ___ the email an hour ago.',a:['sends','has sent','sent','sending'],c:2,e:'“An hour ago” uses the simple past.'},
+{id:'l2-12',q:'By next June, she ___ here for five years.',a:['works','worked','will have worked','has worked'],c:2,e:'A duration completed by a future point uses future perfect.'},
+{id:'l2-13',q:'They ___ football when it began to rain.',a:['played','were playing','are playing','have played'],c:1,e:'The game was in progress when the rain began.'},
+{id:'l2-14',q:'I ___ never ___ sushi before.',a:['did / eat','have / eaten','am / eating','was / ate'],c:1,e:'Use have + past participle for life experience.'},
+{id:'l2-15',q:'She ___ for two hours and is still working.',a:['studies','studied','has been studying','is studied'],c:2,e:'An activity continuing until now uses present perfect continuous.'},
+{id:'l2-16',q:'When I reached the station, the train ___.',a:['leaves','has left','had left','will leave'],c:2,e:'The train left before I reached the station.'},
+{id:'l2-17',q:'We ___ our cousins this weekend.',a:['visited','visit yesterday','are visiting','had visit'],c:2,e:'Present continuous can describe a planned future arrangement.'},
+{id:'l2-18',q:'Water ___ at 100°C at sea level.',a:['boiled','boils','is boiling always','has boiled'],c:1,e:'Scientific facts use the simple present.'},
+{id:'l2-19',q:'I ___ dinner before you called.',a:['have cooked','had cooked','cook','will cook'],c:1,e:'Past perfect shows dinner was ready before the call.'},
+{id:'l2-20',q:'This time tomorrow, we ___ to Jaipur.',a:['drive','drove','will be driving','have driven'],c:2,e:'Use future continuous for an action in progress at a future time.'}
+],
+level3: [
+{id:'l3-01',q:'By the time the doctor arrived, the patient ___ consciousness.',a:['loses','has lost','had lost','will lose'],c:2,e:'The loss occurred before the doctor arrived.'},
+{id:'l3-02',q:'She ___ for three hours when the electricity went out.',a:['studied','has studied','had been studying','will study'],c:2,e:'Past perfect continuous highlights duration before a past event.'},
+{id:'l3-03',q:'By December, they ___ the bridge.',a:['complete','completed','will have completed','have completing'],c:2,e:'Future perfect describes completion before a future deadline.'},
+{id:'l3-04',q:'He ___ in London for ten years before he moved to Delhi.',a:['lives','has lived','had lived','will live'],c:2,e:'Past perfect describes the earlier period before he moved.'},
+{id:'l3-05',q:'If she studies hard, she ___ the examination.',a:['passed','would passed','will pass','has pass'],c:2,e:'The first conditional uses present simple + will.'},
+{id:'l3-06',q:'I wish I ___ more time yesterday.',a:['have','had had','will have','am having'],c:1,e:'“Wish” about a past regret uses past perfect.'},
+{id:'l3-07',q:'At this time next week, they ___ their final exams.',a:['take','took','will be taking','have taken yesterday'],c:2,e:'Future continuous describes an action in progress at that time.'},
+{id:'l3-08',q:'The manager said that the team ___ the target.',a:['meets','has met','had met','will meets'],c:2,e:'In reported speech, a past reporting verb often shifts present perfect to past perfect.'},
+{id:'l3-09',q:'By 6 p.m., I ___ for eight hours.',a:['will have been working','work','worked','have work'],c:0,e:'Future perfect continuous emphasizes duration up to a future point.'},
+{id:'l3-10',q:'When she arrived, we ___ for nearly an hour.',a:['wait','have waited','had been waiting','will wait'],c:2,e:'The waiting continued for a period before her arrival.'},
+{id:'l3-11',q:'If I ___ you, I would apologise.',a:['am','was being','were','will be'],c:2,e:'The hypothetical second conditional commonly uses “were”.'},
+{id:'l3-12',q:'He ___ the report before the meeting began.',a:['finishes','has finished','had finished','will finish'],c:2,e:'The report was finished before another past event.'},
+{id:'l3-13',q:'She ___ English since she was six.',a:['learns','learned only','has been learning','is learn'],c:2,e:'Present perfect continuous emphasizes ongoing learning since the past.'},
+{id:'l3-14',q:'The match ___ by the time we switch on the television.',a:['ends','ended yesterday','will have ended','has ending'],c:2,e:'Future perfect shows completion before a future event.'},
+{id:'l3-15',q:'I ___ him at the conference last month.',a:['meet','have met','met','had meet'],c:2,e:'A specific finished time in the past uses simple past.'},
+{id:'l3-16',q:'She said she ___ the assignment the following day.',a:['will submit','would submit','submits','has submitted'],c:1,e:'In reported speech, “will” often changes to “would”.'},
+{id:'l3-17',q:'The ground was wet because it ___ all night.',a:['rains','has rained','had been raining','will rain'],c:2,e:'Past perfect continuous explains a past result.'},
+{id:'l3-18',q:'By the end of this course, you ___ all twelve tenses.',a:['learned','will have learned','are learn','had learn'],c:1,e:'Use future perfect for learning completed by a future point.'},
+{id:'l3-19',q:'Unless you hurry, you ___ the bus.',a:['missed','will miss','would missed','have miss'],c:1,e:'“Unless” means “if not”; use will in the result clause.'},
+{id:'l3-20',q:'He ___ the same question three times so far.',a:['asked yesterday','has asked','had ask','is ask'],c:1,e:'“So far” connects a repeated action to the present.'}
+]
+};
+
+const badgeInfo = [
+ {id:'first',emoji:'🌱',name:'First Steps',desc:'Complete your first round.',test:s=>s.rounds>=1},
+ {id:'xp100',emoji:'⭐',name:'XP Collector',desc:'Earn 100 total XP.',test:s=>s.xp>=100},
+ {id:'explorer',emoji:'🧭',name:'Quiz Explorer',desc:'Play 5 rounds.',test:s=>s.rounds>=5},
+ {id:'perfect',emoji:'💯',name:'Perfect 100',desc:'Score 10 out of 10 in a round.',test:s=>s.perfect},
+ {id:'adventurer',emoji:'🏅',name:'Level Adventurer',desc:'Complete Levels 1, 2 and 3.',test:s=>[1,2,3].every(n=>s.levels.includes(n))},
+ {id:'legend',emoji:'👑',name:'Grammar Legend',desc:'Earn 500 total XP.',test:s=>s.xp>=500}
+];
+
+const defaultStats = {xp:0,best:0,rounds:0,perfect:false,levels:[],rank:'Beginner'};
+let stats = loadStats();
+let questions=[], questionIndex=0, score=0, answered=false, timerId=null, timeLeft=15;
+let lastMode='level1', currentMode='level1', roundXP=0, seenQuestions=loadSeen();
+
+function loadStats(){
+  try {
+    const saved=JSON.parse(localStorage.getItem('lwnTensesStats'));
+    return saved ? {...defaultStats,...saved} : {...defaultStats};
+  } catch(e){return {...defaultStats};}
+}
+function saveStats(){
+  localStorage.setItem('lwnTensesStats',JSON.stringify(stats));
+}
+function loadSeen(){
+  try {return JSON.parse(localStorage.getItem('lwnTensesSeenQuestions'))||{};}
+  catch(e){return {};}
+}
+function saveSeen(){
+  localStorage.setItem('lwnTensesSeenQuestions',JSON.stringify(seenQuestions));
+}
+function levelNumber(mode){
+  return mode==='level1'?1:mode==='level2'?2:mode==='level3'?3:null;
+}
+function allQuestions(mode){
+  if(mode==='mixed') return [...questionSets.level1,...questionSets.level2,...questionSets.level3];
+  return questionSets[mode] || [];
+}
+function shuffle(array){
+  const a=[...array];
+  for(let i=a.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [a[i],a[j]]=[a[j],a[i]];
+  }
+  return a;
+}
+function startGame(mode){
+  clearInterval(timerId);
+  currentMode=mode; lastMode=mode;
+  const pool=allQuestions(mode);
+  const seenKey=mode;
+  if(!seenQuestions[seenKey]) seenQuestions[seenKey]=[];
+  let unseen=pool.filter(q=>!seenQuestions[seenKey].includes(q.id));
+  if(unseen.length<10){
+    seenQuestions[seenKey]=[];
+    unseen=pool;
+  }
+  questions=shuffle(unseen).slice(0,10);
+  questions.forEach(q=>{
+    if(!seenQuestions[seenKey].includes(q.id)) seenQuestions[seenKey].push(q.id);
+  });
+  saveSeen();
+  questionIndex=0; score=0; roundXP=0;
+  showScreen('gameScreen');
+  renderQuestion();
+}
+function renderQuestion(){
+  answered=false; timeLeft=15;
+  document.getElementById('feedback').className='hidden';
+  document.getElementById('nextButton').classList.add('hidden');
+  document.getElementById('roundLabel').textContent=`Question ${questionIndex+1} of ${questions.length}`;
+  document.getElementById('timer').textContent=`⏱ ${timeLeft} seconds`;
+  document.getElementById('scoreLabel').textContent=`Score: ${score}`;
+  document.getElementById('progressBar').style.width=`${questionIndex/questions.length*100}%`;
+  document.getElementById('levelLabel').textContent=
+    currentMode==='mixed'?'🎲 Mixed Challenge':
+    currentMode==='level1'?'🌱 Level 1 — Beginner':
+    currentMode==='level2'?'🚀 Level 2 — Intermediate':'🔥 Level 3 — Challenge';
+  const q=questions[questionIndex];
+  document.getElementById('questionText').textContent=q.q;
+  const wrap=document.getElementById('answerButtons');
+  wrap.innerHTML='';
+  q.a.forEach((answer,i)=>{
+    const btn=document.createElement('button');
+    btn.className='answer';
+    btn.textContent=`${String.fromCharCode(65+i)}. ${answer}`;
+    btn.onclick=()=>chooseAnswer(i);
+    wrap.appendChild(btn);
+  });
+  timerId=setInterval(()=>{
+    timeLeft--;
+    document.getElementById('timer').textContent=`⏱ ${timeLeft} seconds`;
+    if(timeLeft<=0){
+      clearInterval(timerId);
+      if(!answered) chooseAnswer(-1);
+    }
+  },1000);
+}
+function chooseAnswer(choice){
+  if(answered) return;
+  answered=true; clearInterval(timerId);
+  const q=questions[questionIndex];
+  const buttons=[...document.querySelectorAll('.answer')];
+  buttons.forEach((b,i)=>{
+    b.disabled=true;
+    if(i===q.c) b.classList.add('correct');
+    if(i===choice && choice!==q.c) b.classList.add('wrong');
+  });
+  const feedback=document.getElementById('feedback');
+  feedback.classList.remove('hidden');
+  if(choice===q.c){
+    score++;
+    feedback.className='good';
+    feedback.innerHTML=`<strong>✅ Correct! +10 points</strong><br>${q.e}`;
+  } else {
+    feedback.className='bad';
+    feedback.innerHTML=`<strong>${choice===-1?'⏰ Time is up!':'❌ Not quite!'}</strong><br>Correct answer: ${q.a[q.c]}<br>${q.e}`;
+  }
+  document.getElementById('scoreLabel').textContent=`Score: ${score}`;
+  document.getElementById('progressBar').style.width=`${(questionIndex+1)/questions.length*100}%`;
+  const next=document.getElementById('nextButton');
+  next.textContent=questionIndex===questions.length-1?'See Results 🎉':'Next Question →';
+  next.classList.remove('hidden');
+}
+function nextQuestion(){
+  if(!answered) return;
+  if(questionIndex<questions.length-1){
+    questionIndex++;
+    renderQuestion();
+  } else finishRound();
+}
+function getUnlockedBadges(s){
+  return badgeInfo.filter(b=>b.test(s)).map(b=>b.id);
+}
+function finishRound(){
+  clearInterval(timerId);
+  const oldUnlocked=getUnlockedBadges(stats);
+  const earnedXP=score*10+20+(score===10?25:0);
+  roundXP=earnedXP;
+  stats.xp+=earnedXP;
+  stats.rounds++;
+  stats.best=Math.max(stats.best,score);
+  if(score===10) stats.perfect=true;
+  const completedLevel=levelNumber(currentMode);
+  if(completedLevel && !stats.levels.includes(completedLevel)){
+    stats.levels.push(completedLevel);
+  }
+  stats.rank=stats.xp>=500?'Grammar Legend':
+    stats.xp>=250?'Grammar Pro':
+    stats.xp>=100?'Rising Star':'Beginner';
+  saveStats();
+
+  const newlyUnlocked=badgeInfo.filter(b=>
+    b.test(stats) && !oldUnlocked.includes(b.id)
+  );
+  document.getElementById('resultTitle').textContent=
+    score===10?'🏆 Perfect Round!':score>=7?'🎉 Great Job!':'👏 Round Complete!';
+  document.getElementById('resultScore').textContent=
+    `You scored ${score} out of ${questions.length}. ${score===10?'Perfect score!':score>=7?'Excellent effort!':'Keep practising — you are improving!'}`;
+  document.getElementById('roundXP').textContent=earnedXP;
+  document.getElementById('correctCount').textContent=`${score}/${questions.length}`;
+  document.getElementById('nextLevel').value=currentMode;
+  showBadgeCelebration(newlyUnlocked);
+  document.getElementById('shareText').value=
+    `🎯 I scored ${score}/10 in the LearnwithNitin English Tenses Challenge! I earned ${earnedXP} XP and now have ${stats.xp} total XP. Can you beat my score?`;
+  renderDashboard();
+  showScreen('resultsScreen');
+}
+function showBadgeCelebration(badges){
+  const box=document.getElementById('badgeCelebration');
+  const list=document.getElementById('newBadgesList');
+  list.innerHTML='';
+  if(!badges.length){
+    box.classList.remove('hidden');
+    box.querySelector('h2').textContent='💪 Keep Going!';
+    box.querySelector('p').textContent='No new badge this time, but every round brings you closer to your next achievement.';
+    return;
+  }
+  box.classList.remove('hidden');
+  box.querySelector('h2').textContent=
+    badges.length===1?'🎉 New Badge Unlocked!':'🎉 Amazing! You Unlocked New Badges!';
+  box.querySelector('p').textContent=
+    badges.length===1?'Congratulations! You have earned a new badge.':
+    `Fantastic! You unlocked ${badges.length} badges in one round!`;
+  badges.forEach(b=>{
+    const item=document.createElement('div');
+    item.className='unlocked-item';
+    item.innerHTML=`<span class="emoji">${b.emoji}</span><div><strong>${b.name}</strong><span>${b.desc}</span></div>`;
+    list.appendChild(item);
+  });
+}
+function renderDashboard(){
+  document.getElementById('totalXP').textContent=stats.xp;
+  document.getElementById('bestScore').textContent=`${stats.best}/10`;
+  document.getElementById('roundsPlayed').textContent=stats.rounds;
+  document.getElementById('rank').textContent=stats.rank;
+  const board=document.getElementById('badgeBoard');
+  board.innerHTML='';
+  badgeInfo.forEach(b=>{
+    const unlocked=b.test(stats);
+    const el=document.createElement('div');
+    el.className='badge'+(unlocked?'':' locked');
+    el.innerHTML=`<span class="emoji">${unlocked?b.emoji:'🔒'}</span><strong>${b.name}</strong><small>${unlocked?'Unlocked!':b.desc}</small>`;
+    board.appendChild(el);
+  });
+}
+function showScreen(id){
+  ['homeScreen','gameScreen','resultsScreen'].forEach(screen=>{
+    document.getElementById(screen).classList.toggle('hidden',screen!==id);
+  });
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function showHome(){
+  clearInterval(timerId);
+  renderDashboard();
+  showScreen('homeScreen');
+}
+function quitGame(){
+  clearInterval(timerId);
+  if(confirm('Exit this round? Your current round score will not be added to your XP.')){
+    showHome();
+  } else if(!answered){
+    timeLeft=Math.max(timeLeft,1);
+    timerId=setInterval(()=>{
+      timeLeft--;
+      document.getElementById('timer').textContent=`⏱ ${timeLeft} seconds`;
+      if(timeLeft<=0){
+        clearInterval(timerId);
+        chooseAnswer(-1);
+      }
+    },1000);
+  }
+}
+function copyText(id){
+  const el=document.getElementById(id);
+  el.focus(); el.select(); el.setSelectionRange(0,el.value.length);
+  try {
+    const ok=document.execCommand('copy');
+    alert(ok?'Copied! You can now share it.':'Please select the text and press Ctrl+C.');
+  } catch(e) {
+    alert('Please select the text and press Ctrl+C.');
+  }
+}
+renderDashboard();
+</script>
+</body>
+</html>
